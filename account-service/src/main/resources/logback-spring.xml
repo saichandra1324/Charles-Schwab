@@ -1,0 +1,16 @@
+<configuration>
+    <springProperty scope="context" name="service" source="spring.application.name" defaultValue="account-service"/>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp/>
+                <logLevel/>
+                <loggerName/>
+                <message/>
+                <mdc/>
+                <pattern><pattern>{"service":"${service}"}</pattern></pattern>
+            </providers>
+        </encoder>
+    </appender>
+    <root level="INFO"><appender-ref ref="STDOUT"/></root>
+</configuration>

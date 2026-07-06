@@ -1,0 +1,26 @@
+services:
+  account-service:
+    build:
+      context: .
+      dockerfile: account-service/Dockerfile
+    container_name: account-service
+    ports:
+      - "8081:8081"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "-", "http://localhost:8081/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  gateway-service:
+    build:
+      context: .
+      dockerfile: gateway-service/Dockerfile
+    container_name: gateway-service
+    environment:
+      ACCOUNT_SERVICE_URL: http://account-service:8081
+    ports:
+      - "8080:8080"
+    depends_on:
+      account-service:
+        condition: service_healthy

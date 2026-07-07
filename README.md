@@ -201,6 +201,7 @@ This repository includes documentation showing how AI-assisted SDLC practices we
 - `docs/DEVELOPMENT_AGENT.md` - development-agent implementation notes for error handling, logging, auditing, and Git history
 - `docs/COPILOT_PROMPTS.md` - GitHub Copilot prompts for design, development, QA, review, and documentation agents
 - `.github/copilot-instructions.md` - repository-specific Copilot Agent instructions
+- `.github/agents/*.agent.md` - custom GitHub Copilot agent profiles for Design, Development, QA, Code Review, and Documentation work
 - `docs/AI_USAGE.md` - overall AI-assisted SDLC summary
 
 ## Auditing

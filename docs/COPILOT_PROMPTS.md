@@ -6,6 +6,11 @@ This document captures example GitHub Copilot prompts used to guide design, deve
 
 - GitHub repository Agents tab: [`https://github.com/saichandra1324/Charles-Schwab/agents`](https://github.com/saichandra1324/Charles-Schwab/agents)
 - Repository Copilot instructions: [`.github/copilot-instructions.md`](../.github/copilot-instructions.md)
+- Custom Design Agent profile: [`.github/agents/design-agent.agent.md`](../.github/agents/design-agent.agent.md)
+- Custom Development Agent profile: [`.github/agents/development-agent.agent.md`](../.github/agents/development-agent.agent.md)
+- Custom QA Agent profile: [`.github/agents/qa-agent.agent.md`](../.github/agents/qa-agent.agent.md)
+- Custom Code Review Agent profile: [`.github/agents/code-review-agent.agent.md`](../.github/agents/code-review-agent.agent.md)
+- Custom Documentation Agent profile: [`.github/agents/documentation-agent.agent.md`](../.github/agents/documentation-agent.agent.md)
 - Design Agent deliverable: [`docs/DESIGN_AGENT.md`](DESIGN_AGENT.md)
 - Development Agent deliverable: [`docs/DEVELOPMENT_AGENT.md`](DEVELOPMENT_AGENT.md)
 - QA Agent deliverable: [`docs/QA_AGENT.md`](QA_AGENT.md)
@@ -13,7 +18,7 @@ This document captures example GitHub Copilot prompts used to guide design, deve
 
 ## How to Show These Prompts in the GitHub Agents Tab
 
-The GitHub Agents tab shows real Copilot agent sessions. Committing prompt files to the repository documents the workflow, but it does not automatically create sessions in that tab.
+The GitHub Agents tab shows real Copilot agent sessions. This repository includes custom agent profiles under `.github/agents/`, which should become selectable from the agent dropdown after they are pushed to the default branch. Starting a task with one of those agents creates the visible session in the GitHub Agents tab.
 
 To make sessions appear there:
 

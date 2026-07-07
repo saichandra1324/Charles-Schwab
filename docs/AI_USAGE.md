@@ -41,6 +41,18 @@ AI was used to identify and generate test scenarios:
 
 JaCoCo is configured to generate unit test coverage reports after running Maven tests.
 
+## GitHub Copilot Agent
+
+GitHub Copilot prompts were captured to show how an AI coding agent can support the same SDLC workflow inside GitHub and the IDE:
+
+- Design Agent prompt for service boundaries, data ownership, and failure scenarios
+- Development Agent prompt for focused Spring Boot implementation
+- QA Agent prompt for idempotency, validation, trace, audit, and resiliency tests
+- Code Review Agent prompt for regression and HTTP semantics review
+- Documentation Agent prompt for README and architecture updates
+
+The repository also includes `.github/copilot-instructions.md` so Copilot Agent mode has project-specific guardrails when proposing changes.
+
 ## Example Prompts Used
 
 - "Generate a clean Spring Boot microservice design for an event ledger with idempotency and out-of-order events."
@@ -48,6 +60,9 @@ JaCoCo is configured to generate unit test coverage reports after running Maven 
 - "Suggest unit tests for duplicate financial transaction event handling."
 - "Review this resiliency approach and explain why Retry + Circuit Breaker is appropriate."
 - "Generate meaningful commit messages that show AI-assisted SDLC progress."
+- "Act as a GitHub Copilot coding agent for this Spring Boot Event Ledger repo. Preserve service boundaries, idempotency, trace propagation, and verify with mvn clean test."
+
+Additional Copilot prompts are documented in [`docs/COPILOT_PROMPTS.md`](COPILOT_PROMPTS.md).
 
 ## Engineering Principle
 

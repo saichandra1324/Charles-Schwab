@@ -172,7 +172,7 @@ gateway-service/target/site/jacoco/index.html
 
 ## AI-Assisted SDLC
 
-See [`docs/AI_USAGE.md`](docs/AI_USAGE.md) for how AI was used as a Design Agent, Development Agent, and QA Agent during the SDLC.
+See [`docs/AI_USAGE.md`](docs/AI_USAGE.md) for how AI was used as a Design Agent, Development Agent, QA Agent, and GitHub Copilot Agent during the SDLC.
 
 ## AI Design Agent Deliverables
 
@@ -180,6 +180,7 @@ The design-phase AI deliverables are included under `docs/`:
 
 - `docs/DESIGN_AGENT.md` - full design document generated/refined through the Design AI Agent workflow
 - `docs/ARCHITECTURE_DIAGRAMS.md` - Mermaid architecture, sequence, tracing, failure, and data model diagrams
+- `docs/COPILOT_PROMPTS.md` - GitHub Copilot prompts and agent examples
 - `docs/AI_USAGE.md` - explanation of AI-assisted SDLC usage
 
 
@@ -190,6 +191,8 @@ This repository includes documentation showing how AI-assisted SDLC practices we
 - `docs/DESIGN_AGENT.md` - design-agent workflow and design decisions
 - `docs/ARCHITECTURE_DIAGRAMS.md` - Mermaid architecture and sequence diagrams
 - `docs/DEVELOPMENT_AGENT.md` - development-agent implementation notes for error handling, logging, auditing, and Git history
+- `docs/COPILOT_PROMPTS.md` - GitHub Copilot prompts for design, development, QA, review, and documentation agents
+- `.github/copilot-instructions.md` - repository-specific Copilot Agent instructions
 - `docs/AI_USAGE.md` - overall AI-assisted SDLC summary
 
 ## Auditing

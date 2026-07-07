@@ -4,11 +4,32 @@ This document captures example GitHub Copilot prompts used to guide design, deve
 
 ## Copilot Agent Links
 
+- GitHub repository Agents tab: [`https://github.com/saichandra1324/Charles-Schwab/agents`](https://github.com/saichandra1324/Charles-Schwab/agents)
 - Repository Copilot instructions: [`.github/copilot-instructions.md`](../.github/copilot-instructions.md)
 - Design Agent deliverable: [`docs/DESIGN_AGENT.md`](DESIGN_AGENT.md)
 - Development Agent deliverable: [`docs/DEVELOPMENT_AGENT.md`](DEVELOPMENT_AGENT.md)
 - QA Agent deliverable: [`docs/QA_AGENT.md`](QA_AGENT.md)
 - AI-assisted SDLC summary: [`docs/AI_USAGE.md`](AI_USAGE.md)
+
+## How to Show These Prompts in the GitHub Agents Tab
+
+The GitHub Agents tab shows real Copilot agent sessions. Committing prompt files to the repository documents the workflow, but it does not automatically create sessions in that tab.
+
+To make sessions appear there:
+
+1. Open [`https://github.com/saichandra1324/Charles-Schwab/agents`](https://github.com/saichandra1324/Charles-Schwab/agents).
+2. Click **Create task**.
+3. Select the `saichandra1324/Charles-Schwab` repository and the `main` branch.
+4. Paste one prompt from this file.
+5. Start the task and let Copilot create the agent session.
+
+Suggested visible sessions:
+
+- `Design Agent` - use the Design Agent prompt.
+- `Development Agent` - use the Development Agent prompt.
+- `QA Agent` - use the QA Agent prompt.
+- `Code Review Agent` - use the Code Review Agent prompt.
+- `Documentation Agent` - use the Documentation Agent prompt.
 
 ## Design Agent Prompt
 

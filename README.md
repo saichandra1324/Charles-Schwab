@@ -174,6 +174,14 @@ gateway-service/target/site/jacoco/index.html
 
 See [`docs/AI_USAGE.md`](docs/AI_USAGE.md) for how AI was used as a Design Agent, Development Agent, QA Agent, and GitHub Copilot Agent during the SDLC.
 
+Open the repository Agents tab here:
+
+```text
+https://github.com/saichandra1324/Charles-Schwab/agents
+```
+
+Use the prompts in [`docs/COPILOT_PROMPTS.md`](docs/COPILOT_PROMPTS.md) with **Agents > Create task** to create visible Copilot agent sessions like the GitHub Agents screen.
+
 ## AI Design Agent Deliverables
 
 The design-phase AI deliverables are included under `docs/`:

@@ -3,6 +3,7 @@ package com.example.gateway;
 import com.example.gateway.client.AccountClient;
 import com.example.gateway.dto.*;
 import com.example.gateway.exception.AccountServiceUnavailableException;
+import com.example.gateway.exception.EventNotFoundException;
 import com.example.gateway.service.EventService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,12 @@ class EventServiceTests {
         EventRequest request = sample("evt-g1", "2026-05-15T12:00:00Z");
         when(accountClient.apply(anyString(), any(TransactionRequest.class)))
                 .thenReturn(new TransactionResponse("evt-g1", "acct-g", "CREDIT", new BigDecimal("50.00"), "USD", Instant.now(), new BigDecimal("50.00")));
-        eventService.create(request);
-        eventService.create(request);
+        EventCreationResult first = eventService.create(request);
+        EventCreationResult duplicate = eventService.create(request);
+
+        assertThat(first.created()).isTrue();
+        assertThat(duplicate.created()).isFalse();
+        assertThat(duplicate.response().eventId()).isEqualTo("evt-g1");
         verify(accountClient, times(1)).apply(anyString(), any(TransactionRequest.class));
     }
 
@@ -44,6 +49,22 @@ class EventServiceTests {
         when(accountClient.apply(anyString(), any(TransactionRequest.class))).thenThrow(new RuntimeException("down"));
         assertThatThrownBy(() -> eventService.create(sample("evt-g4", "2026-05-15T14:00:00Z")))
                 .isInstanceOf(AccountServiceUnavailableException.class);
+    }
+
+    @Test
+    void missingEventLookupThrowsNotFound() {
+        assertThatThrownBy(() -> eventService.get("evt-does-not-exist"))
+                .isInstanceOf(EventNotFoundException.class)
+                .hasMessageContaining("evt-does-not-exist");
+    }
+
+    @Test
+    void balanceQueryFailureIsTranslatedToServiceUnavailable() {
+        when(accountClient.balance("acct-balance-down")).thenThrow(new RuntimeException("down"));
+
+        assertThatThrownBy(() -> eventService.balance("acct-balance-down"))
+                .isInstanceOf(AccountServiceUnavailableException.class)
+                .hasMessageContaining("Account Service is unreachable for balance query");
     }
 
     private EventRequest sample(String eventId, String timestamp) {

@@ -20,25 +20,25 @@ public class EventController {
 
     @PostMapping("/events")
     public ResponseEntity<EventResponse> create(@Valid @RequestBody EventRequest request) {
-        EventResponse response = eventService.create(request);
-        HttpStatus status = "APPLIED".equals(response.status()) ? HttpStatus.CREATED : HttpStatus.OK;
-        return ResponseEntity.status(status).body(response);
+        EventCreationResult result = eventService.create(request);
+        HttpStatus status = result.created() ? HttpStatus.CREATED : HttpStatus.OK;
+        return ResponseEntity.status(status).body(result.response());
     }
 
     @GetMapping("/events/{id}")
-    public EventResponse get(@PathVariable String id) { return eventService.get(id); }
+    public EventResponse get(@PathVariable("id") String id) { return eventService.get(id); }
 
     @GetMapping(value = "/events", params = "account")
     public List<EventResponse> list(@RequestParam("account") String accountId) { return eventService.list(accountId); }
 
     @GetMapping("/accounts/{accountId}/balance")
-    public Map<String,Object> balance(@PathVariable String accountId) { return eventService.balance(accountId); }
+    public Map<String,Object> balance(@PathVariable("accountId") String accountId) { return eventService.balance(accountId); }
 
     @GetMapping("/audit")
     public List<AuditRecord> latestAudit() { return auditService.latest(); }
 
     @GetMapping("/events/{id}/audit")
-    public List<AuditRecord> eventAudit(@PathVariable String id) { return auditService.byEvent(id); }
+    public List<AuditRecord> eventAudit(@PathVariable("id") String id) { return auditService.byEvent(id); }
 
     @GetMapping("/health")
     public Map<String,Object> health() {

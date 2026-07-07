@@ -31,13 +31,13 @@ public class EventService {
     }
 
     @Transactional(noRollbackFor = AccountServiceUnavailableException.class)
-    public EventResponse create(EventRequest request) {
+    public EventCreationResult create(EventRequest request) {
         Optional<EventRecord> existing = eventRepository.findById(request.eventId());
         if (existing.isPresent()) {
             log.info("Duplicate event submission ignored eventId={}", request.eventId());
             auditService.record("EVENT_DUPLICATE", request.eventId(), request.accountId(), "IGNORED", "Duplicate event returned without changing balance");
             meterRegistry.counter("gateway.events.duplicate").increment();
-            return toResponse(existing.get());
+            return new EventCreationResult(toResponse(existing.get()), false);
         }
         String metadataJson = writeMetadata(request.metadata());
         EventRecord saved = eventRepository.save(new EventRecord(request.eventId(), request.accountId(), request.type(), request.amount(), request.currency(), request.eventTimestamp(), metadataJson, "RECEIVED"));
@@ -48,7 +48,7 @@ public class EventService {
             meterRegistry.counter("gateway.events.created", "status", "APPLIED").increment();
             log.info("Event processed eventId={} accountId={}", request.eventId(), request.accountId());
             auditService.record("EVENT_APPLIED", request.eventId(), request.accountId(), "SUCCESS", "Account service applied the transaction");
-            return toResponse(saved);
+            return new EventCreationResult(toResponse(saved), true);
         } catch (Exception ex) {
             saved.setStatus("FAILED_ACCOUNT_SERVICE_UNAVAILABLE");
             meterRegistry.counter("gateway.events.created", "status", "FAILED").increment();

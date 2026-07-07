@@ -8,11 +8,11 @@ import java.util.Map;
 @FeignClient(name = "accountClient", url = "${account-service.url}")
 public interface AccountClient {
     @PostMapping("/accounts/{accountId}/transactions")
-    TransactionResponse apply(@PathVariable String accountId, @RequestBody TransactionRequest request);
+    TransactionResponse apply(@PathVariable("accountId") String accountId, @RequestBody TransactionRequest request);
 
     @GetMapping("/accounts/{accountId}/balance")
-    Map<String,Object> balance(@PathVariable String accountId);
+    Map<String,Object> balance(@PathVariable("accountId") String accountId);
 
     @GetMapping("/accounts/{accountId}")
-    AccountResponse account(@PathVariable String accountId);
+    AccountResponse account(@PathVariable("accountId") String accountId);
 }

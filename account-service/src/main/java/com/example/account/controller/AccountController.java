@@ -26,16 +26,16 @@ public class AccountController {
     }
 
     @GetMapping("/{accountId}/balance")
-    public Map<String, Object> balance(@PathVariable String accountId) { return Map.of("accountId", accountId, "balance", accountService.getBalance(accountId)); }
+    public Map<String, Object> balance(@PathVariable("accountId") String accountId) { return Map.of("accountId", accountId, "balance", accountService.getBalance(accountId)); }
 
     @GetMapping("/{accountId}")
-    public AccountResponse account(@PathVariable String accountId) { return accountService.getAccount(accountId); }
+    public AccountResponse account(@PathVariable("accountId") String accountId) { return accountService.getAccount(accountId); }
 
 
     @GetMapping("/audit")
     public List<AuditRecord> latestAudit() { return auditService.latest(); }
 
     @GetMapping("/audit/events/{eventId}")
-    public List<AuditRecord> eventAudit(@PathVariable String eventId) { return auditService.byEvent(eventId); }
+    public List<AuditRecord> eventAudit(@PathVariable("eventId") String eventId) { return auditService.byEvent(eventId); }
 
 }

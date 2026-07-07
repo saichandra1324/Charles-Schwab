@@ -28,3 +28,12 @@ git add README.md docs
 git commit -m "Document architecture and AI-assisted SDLC workflow"
 ```
 ```
+
+## QA Agent Commit
+
+```bash
+git add .
+git commit -m "Add QA Agent tests and coverage reports"
+```
+
+This commit adds automated QA coverage, coverage documentation, and a repeatable coverage-report generation script.

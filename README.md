@@ -173,3 +173,61 @@ gateway-service/target/site/jacoco/index.html
 ## AI-Assisted SDLC
 
 See [`docs/AI_USAGE.md`](docs/AI_USAGE.md) for how AI was used as a Design Agent, Development Agent, and QA Agent during the SDLC.
+
+## AI Design Agent Deliverables
+
+The design-phase AI deliverables are included under `docs/`:
+
+- `docs/DESIGN_AGENT.md` - full design document generated/refined through the Design AI Agent workflow
+- `docs/ARCHITECTURE_DIAGRAMS.md` - Mermaid architecture, sequence, tracing, failure, and data model diagrams
+- `docs/AI_USAGE.md` - explanation of AI-assisted SDLC usage
+
+
+## AI Agent Deliverables
+
+This repository includes documentation showing how AI-assisted SDLC practices were applied:
+
+- `docs/DESIGN_AGENT.md` - design-agent workflow and design decisions
+- `docs/ARCHITECTURE_DIAGRAMS.md` - Mermaid architecture and sequence diagrams
+- `docs/DEVELOPMENT_AGENT.md` - development-agent implementation notes for error handling, logging, auditing, and Git history
+- `docs/AI_USAGE.md` - overall AI-assisted SDLC summary
+
+## Auditing
+
+Both services persist audit events in their own H2 databases. The audit trail captures action, event ID, account ID, trace ID, outcome, details, and timestamp.
+
+Gateway audit endpoints:
+
+```bash
+curl http://localhost:8080/audit
+curl http://localhost:8080/events/evt-001/audit
+```
+
+Account Service audit endpoints:
+
+```bash
+curl http://localhost:8081/accounts/audit
+curl http://localhost:8081/accounts/audit/events/evt-001
+```
+
+## QA Agent Deliverables
+
+The QA-phase AI deliverables are included under `docs/`:
+
+- `docs/QA_AGENT.md` - QA Agent workflow, automated test strategy, and prompt examples
+- `docs/reports/UNIT_TEST_COVERAGE.md` - unit test inventory and JaCoCo coverage instructions
+- `docs/reports/FUNCTIONAL_TEST_COVERAGE.md` - requirement-to-test functional coverage matrix
+- `scripts/generate-coverage-reports.sh` - runs tests and copies JaCoCo reports into `docs/reports/unit-coverage`
+
+Run all tests and generate coverage artifacts:
+
+```bash
+./scripts/generate-coverage-reports.sh
+```
+
+After the script completes, open:
+
+```text
+docs/reports/unit-coverage/gateway-service/index.html
+docs/reports/unit-coverage/account-service/index.html
+```

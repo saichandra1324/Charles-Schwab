@@ -18,9 +18,10 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
     private final MeterRegistry meterRegistry;
+    private final AuditService auditService;
 
-    public AccountService(AccountRepository accountRepository, TransactionRepository transactionRepository, MeterRegistry meterRegistry) {
-        this.accountRepository = accountRepository; this.transactionRepository = transactionRepository; this.meterRegistry = meterRegistry;
+    public AccountService(AccountRepository accountRepository, TransactionRepository transactionRepository, MeterRegistry meterRegistry, AuditService auditService) {
+        this.accountRepository = accountRepository; this.transactionRepository = transactionRepository; this.meterRegistry = meterRegistry; this.auditService = auditService;
     }
 
     @Transactional
@@ -28,6 +29,7 @@ public class AccountService {
         var existing = transactionRepository.findByEventId(request.eventId());
         if (existing.isPresent()) {
             log.info("Duplicate transaction ignored eventId={}", request.eventId());
+            auditService.record("TRANSACTION_DUPLICATE", request.eventId(), request.accountId(), "IGNORED", "Duplicate eventId detected in account service");
             meterRegistry.counter("account.transactions.duplicate").increment();
             var acc = accountRepository.findById(request.accountId()).orElse(new Account(request.accountId()));
             return toResponse(existing.get(), acc.getBalance());
@@ -39,6 +41,7 @@ public class AccountService {
         TransactionRecord tx = transactionRepository.save(new TransactionRecord(request.eventId(), request.accountId(), request.type(), request.amount(), request.currency(), request.eventTimestamp()));
         meterRegistry.counter("account.transactions.applied", "type", request.type()).increment();
         log.info("Transaction applied eventId={} accountId={} balance={}", request.eventId(), request.accountId(), newBalance);
+        auditService.record("TRANSACTION_APPLIED", request.eventId(), request.accountId(), "SUCCESS", "Balance updated to " + newBalance);
         return toResponse(tx, newBalance);
     }
 
@@ -52,7 +55,9 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public BigDecimal getBalance(String accountId) {
-        return accountRepository.findById(accountId).map(Account::getBalance).orElse(BigDecimal.ZERO);
+        BigDecimal balance = accountRepository.findById(accountId).map(Account::getBalance).orElse(BigDecimal.ZERO);
+        auditService.record("BALANCE_READ", null, accountId, "SUCCESS", "Balance query returned " + balance);
+        return balance;
     }
 
     private TransactionResponse toResponse(TransactionRecord tx, BigDecimal balance) {

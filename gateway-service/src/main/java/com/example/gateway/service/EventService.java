@@ -24,32 +24,40 @@ public class EventService {
     private final AccountClient accountClient;
     private final ObjectMapper objectMapper;
     private final MeterRegistry meterRegistry;
+    private final AuditService auditService;
 
-    public EventService(EventRepository eventRepository, AccountClient accountClient, ObjectMapper objectMapper, MeterRegistry meterRegistry) {
-        this.eventRepository = eventRepository; this.accountClient = accountClient; this.objectMapper = objectMapper; this.meterRegistry = meterRegistry;
+    public EventService(EventRepository eventRepository, AccountClient accountClient, ObjectMapper objectMapper, MeterRegistry meterRegistry, AuditService auditService) {
+        this.eventRepository = eventRepository; this.accountClient = accountClient; this.objectMapper = objectMapper; this.meterRegistry = meterRegistry; this.auditService = auditService;
     }
 
-    @Transactional
+    @Transactional(noRollbackFor = AccountServiceUnavailableException.class)
     public EventResponse create(EventRequest request) {
         Optional<EventRecord> existing = eventRepository.findById(request.eventId());
         if (existing.isPresent()) {
             log.info("Duplicate event submission ignored eventId={}", request.eventId());
+            auditService.record("EVENT_DUPLICATE", request.eventId(), request.accountId(), "IGNORED", "Duplicate event returned without changing balance");
             meterRegistry.counter("gateway.events.duplicate").increment();
             return toResponse(existing.get());
         }
         String metadataJson = writeMetadata(request.metadata());
         EventRecord saved = eventRepository.save(new EventRecord(request.eventId(), request.accountId(), request.type(), request.amount(), request.currency(), request.eventTimestamp(), metadataJson, "RECEIVED"));
+        auditService.record("EVENT_RECEIVED", request.eventId(), request.accountId(), "SUCCESS", "Event accepted by gateway and stored locally");
         try {
             applyTransaction(request);
             saved.setStatus("APPLIED");
             meterRegistry.counter("gateway.events.created", "status", "APPLIED").increment();
             log.info("Event processed eventId={} accountId={}", request.eventId(), request.accountId());
+            auditService.record("EVENT_APPLIED", request.eventId(), request.accountId(), "SUCCESS", "Account service applied the transaction");
             return toResponse(saved);
-        } catch (AccountServiceUnavailableException ex) {
+        } catch (Exception ex) {
             saved.setStatus("FAILED_ACCOUNT_SERVICE_UNAVAILABLE");
             meterRegistry.counter("gateway.events.created", "status", "FAILED").increment();
-            log.error("Account service unavailable eventId={} accountId={}", request.eventId(), request.accountId());
-            throw ex;
+            log.error("Account service unavailable eventId={} accountId={}", request.eventId(), request.accountId(), ex);
+            auditService.record("EVENT_APPLY_FAILED", request.eventId(), request.accountId(), "FAILED", "Account service unavailable while applying transaction");
+            if (ex instanceof AccountServiceUnavailableException unavailable) {
+                throw unavailable;
+            }
+            throw new AccountServiceUnavailableException("Account Service is currently unavailable. Please retry later.");
         }
     }
 

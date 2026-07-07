@@ -2,6 +2,8 @@ package com.example.gateway.controller;
 
 import com.example.gateway.dto.*;
 import com.example.gateway.service.EventService;
+import com.example.gateway.service.AuditService;
+import com.example.gateway.entity.AuditRecord;
 import jakarta.validation.Valid;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +14,9 @@ import java.util.*;
 @RestController
 public class EventController {
     private final EventService eventService;
+    private final AuditService auditService;
     private final DataSource dataSource;
-    public EventController(EventService eventService, DataSource dataSource) { this.eventService = eventService; this.dataSource = dataSource; }
+    public EventController(EventService eventService, AuditService auditService, DataSource dataSource) { this.eventService = eventService; this.auditService = auditService; this.dataSource = dataSource; }
 
     @PostMapping("/events")
     public ResponseEntity<EventResponse> create(@Valid @RequestBody EventRequest request) {
@@ -30,6 +33,12 @@ public class EventController {
 
     @GetMapping("/accounts/{accountId}/balance")
     public Map<String,Object> balance(@PathVariable String accountId) { return eventService.balance(accountId); }
+
+    @GetMapping("/audit")
+    public List<AuditRecord> latestAudit() { return auditService.latest(); }
+
+    @GetMapping("/events/{id}/audit")
+    public List<AuditRecord> eventAudit(@PathVariable String id) { return auditService.byEvent(id); }
 
     @GetMapping("/health")
     public Map<String,Object> health() {
